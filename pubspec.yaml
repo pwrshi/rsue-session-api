@@ -8,6 +8,7 @@ environment:
   flutter: ">=2.5.0"
 
 dependencies:
+  html: ^0.15.1
   flutter:
     sdk: flutter
   dio: ^4.0.6

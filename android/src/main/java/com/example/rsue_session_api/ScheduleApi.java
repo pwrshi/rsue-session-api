@@ -111,8 +111,8 @@ public class ScheduleApi implements api.ScheduleAPI {
                     System.out.println(i + ": " + name + " " + datetime + " " + rooms + " " + teachers);
                 }
             }
-            api.GroupSchedule d = new api.GroupSchedule.Builder().setName(name).setExams(subjects).build();
-            result.add(d);
+            // api.GroupSchedule d = new api.GroupSchedule.Builder().setName(name).setExams(subjects).build();
+            // result.add(d);
             return result;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

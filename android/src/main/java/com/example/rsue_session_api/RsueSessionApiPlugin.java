@@ -17,13 +17,14 @@ public class RsueSessionApiPlugin implements FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
 
   @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "rsue_session_api");
-    channel.setMethodCallHandler(this);
+  public void onAttachedToEngine(  FlutterPluginBinding flutterPluginBinding) {
+    api.ScheduleAPI.setup(flutterPluginBinding.getBinaryMessenger(), new ScheduleApi());
+//    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "rsue_session_api");
+//    channel.setMethodCallHandler(this);
   }
 
   @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+  public void onMethodCall(  MethodCall call,   Result result) {
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
     } else {
@@ -32,7 +33,7 @@ public class RsueSessionApiPlugin implements FlutterPlugin, MethodCallHandler {
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(  FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
   }
 }

@@ -30,6 +30,11 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 26
     }
+}
+
+dependencies {
+    implementation fileTree(dir: 'gradle/wrapper', include: ['*.aar', '*.jar'], exclude: [])
+    implementation 'org.apache.poi:poi:5.2.3'
 }

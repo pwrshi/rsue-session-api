@@ -13,13 +13,13 @@ enum MarkType {
   credit,
 }
 
-class ScheduleOfExam {
-  ScheduleOfExam({
+class SubjectInfo {
+  SubjectInfo({
     required this.mark,
     required this.dateTime,
     required this.name,
     this.teachers,
-    required this.room,
+    this.rooms,
   });
 
   MarkType mark;
@@ -30,7 +30,7 @@ class ScheduleOfExam {
 
   List<String?>? teachers;
 
-  String room;
+  List<String?>? rooms;
 
   Object encode() {
     return <Object?>[
@@ -38,19 +38,45 @@ class ScheduleOfExam {
       dateTime,
       name,
       teachers,
-      room,
+      rooms,
     ];
   }
 
-  static ScheduleOfExam decode(Object result) {
+  static SubjectInfo decode(Object result) {
     result as List<Object?>;
-    return ScheduleOfExam(
+    return SubjectInfo(
       mark: MarkType.values[result[0]! as int]
 ,
       dateTime: result[1]! as String,
       name: result[2]! as String,
       teachers: (result[3] as List<Object?>?)?.cast<String?>(),
-      room: result[4]! as String,
+      rooms: (result[4] as List<Object?>?)?.cast<String?>(),
+    );
+  }
+}
+
+class GroupSchedule {
+  GroupSchedule({
+    required this.name,
+    required this.exams,
+  });
+
+  String name;
+
+  List<SubjectInfo?> exams;
+
+  Object encode() {
+    return <Object?>[
+      name,
+      exams,
+    ];
+  }
+
+  static GroupSchedule decode(Object result) {
+    result as List<Object?>;
+    return GroupSchedule(
+      name: result[0]! as String,
+      exams: (result[1] as List<Object?>?)!.cast<SubjectInfo?>(),
     );
   }
 }
@@ -59,8 +85,11 @@ class _ScheduleAPICodec extends StandardMessageCodec {
   const _ScheduleAPICodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is ScheduleOfExam) {
+    if (value is GroupSchedule) {
       buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else if (value is SubjectInfo) {
+      buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -71,7 +100,10 @@ class _ScheduleAPICodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
-        return ScheduleOfExam.decode(readValue(buffer)!);
+        return GroupSchedule.decode(readValue(buffer)!);
+      
+      case 129:       
+        return SubjectInfo.decode(readValue(buffer)!);
       
       default:
 
@@ -91,7 +123,7 @@ class ScheduleAPI {
 
   static const MessageCodec<Object?> codec = _ScheduleAPICodec();
 
-  Future<List<ScheduleOfExam?>> getAllGroups(Uint8List arg_file) async {
+  Future<List<GroupSchedule?>> getAllGroups(Uint8List arg_file) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.ScheduleAPI.getAllGroups', codec,
         binaryMessenger: _binaryMessenger);
@@ -114,11 +146,11 @@ class ScheduleAPI {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyList[0] as List<Object?>?)!.cast<ScheduleOfExam?>();
+      return (replyList[0] as List<Object?>?)!.cast<GroupSchedule?>();
     }
   }
 
-  Future<ScheduleOfExam> getGroupByName(Uint8List arg_file, String arg_name) async {
+  Future<GroupSchedule> getGroupByName(Uint8List arg_file, String arg_name) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.ScheduleAPI.getGroupByName', codec,
         binaryMessenger: _binaryMessenger);
@@ -141,7 +173,7 @@ class ScheduleAPI {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyList[0] as ScheduleOfExam?)!;
+      return (replyList[0] as GroupSchedule?)!;
     }
   }
 }

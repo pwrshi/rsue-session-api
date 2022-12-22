@@ -26,4 +26,15 @@ class RsueSessionApi {
     }
     return result;
   }
+
+  Future<GroupSchedule?> getGroupSchedule(String name) async {
+    List<GroupSchedule?> allGroups = await getAllSchedules();
+    GroupSchedule? result;
+    for (var element in allGroups) {
+      if (element?.name == name) {
+        result = element;
+      }
+    }
+    return result;
+  }
 }

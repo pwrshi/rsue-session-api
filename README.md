@@ -1,15 +1,41 @@
 # rsue_session_api
 
-A new Flutter plugin project.
+Маленькая библиотечка для получения списка экзаменов для каждой очной группы университета РГЭУ(РИНХ)
 
-## Getting Started
+## Как работать
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+Метод getAllSchedules вернёт все экзамены для каждой группы
+Метод getGroupSchedule вернёт конкретное расписание по имени группы, переданное в аргументы
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```dart
+Future<List<GroupSchedule?>> RsueSessionApi.getAllSchedules();
+Future<GroupSchedule?> getGroupSchedule(String name);
+```
 
+Само расписание содержит только имя и список экзаменов:
+
+```dart
+class GroupSchedule {
+  GroupSchedule({required this.name, required this.exams});
+  String name;
+  List<SubjectInfo?> exams;
+}
+```
+
+А предмет состоит из:
+
+```dart
+class SubjectInfo {
+  SubjectInfo(
+      {required this.mark,
+      required this.dateTime,
+      required this.name,
+      this.rooms,
+      this.teachers});
+  MarkType mark;
+  String dateTime;
+  String name;
+  List<String?>? teachers;
+  List<String?>? rooms;
+}
+```

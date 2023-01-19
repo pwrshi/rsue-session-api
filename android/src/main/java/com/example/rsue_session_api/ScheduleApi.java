@@ -80,7 +80,19 @@ public class ScheduleApi implements api.ScheduleAPI {
                     groupName = name;
                     subjects = new ArrayList<api.SubjectInfo>();
                 } else {
-                    api.SubjectInfo s =new api.SubjectInfo.Builder().setName(name).setMark(api.MarkType.CREDIT).setRooms(rooms).setDateTime(datetime)
+                    api.MarkType type;
+                    if (name.contains(" (экзамен)")) {
+                        name = name.replace(" (экзамен)", "");
+                        type = api.MarkType.EXAM;
+                    } else if (name.contains(" (зачет)")) {
+                        name = name.replace(" (зачет)", "");
+                        type = api.MarkType.CREDIT;
+                    } else {
+                        name = name.replace(" (практика)", "");
+                        type = api.MarkType.PRACTISE;
+                    }
+
+                    api.SubjectInfo s =new api.SubjectInfo.Builder().setName(name).setMark(type).setRooms(rooms).setDateTime(datetime)
                             .setTeachers(teachers).build();
                     if(subjects.size() != 0){
                         api.SubjectInfo b = subjects.get(subjects.toArray().length - 1);

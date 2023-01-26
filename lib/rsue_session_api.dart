@@ -18,7 +18,7 @@ class RsueSessionApi {
     List<GroupSchedule?> result = [];
     for (var link in links) {
       if (!link!.contains("xlsx")) {
-        var doc = await Dio().get<Uint8List>("https://rsue.ru/${link!}",
+        var doc = await Dio().get<Uint8List>("https://rsue.ru/$link",
             options: Options(responseType: ResponseType.bytes));
         var items = await ScheduleAPI().getAllGroups(doc.data!);
         result.addAll(items);

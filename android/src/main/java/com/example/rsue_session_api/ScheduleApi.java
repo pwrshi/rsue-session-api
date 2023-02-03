@@ -42,6 +42,8 @@ public class ScheduleApi implements api.ScheduleAPI {
             for (int i = 12; !name.matches("Декан факультета"); i++) {
                 HSSFRow row1 = worksheet.getRow(i);
 
+
+
                 HSSFCell c;
 
                 // check style
@@ -74,7 +76,7 @@ public class ScheduleApi implements api.ScheduleAPI {
                      break;
                  } else if ((teachers.get(0) == "") && (datetime == "") && (rooms.get(0) == "")) {
                     if (groupName != null) {
-                        api.GroupSchedule d = new api.GroupSchedule.Builder().setName(name).setExams(subjects).build();
+                        api.GroupSchedule d = new api.GroupSchedule.Builder().setName(groupName).setExams(subjects).build();
                         result.add(d);
                     }
                     groupName = name;
@@ -114,8 +116,8 @@ public class ScheduleApi implements api.ScheduleAPI {
 
                 }
             }
-            // api.GroupSchedule d = new api.GroupSchedule.Builder().setName(name).setExams(subjects).build();
-            // result.add(d);
+            api.GroupSchedule d = new api.GroupSchedule.Builder().setName(groupName).setExams(subjects).build();
+            result.add(d);
             return result;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
